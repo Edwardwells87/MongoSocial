@@ -1,5 +1,5 @@
-const User = require('./User');
-const Thought =require('./Thought');
+const Users = require('./Users');
+const Thoughts =require('./Thoughts');
 
 
 
