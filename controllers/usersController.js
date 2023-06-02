@@ -1,7 +1,8 @@
-const {Users, Thoughts} = require('../models');
+const { User, Thought } = require('../models');
 
+const userController = {
 
-async function findOneUser(userId) {
+async findOneUser(userId) {
   try {
     const user = await User.findOne({ _id: userId });
     return user;
@@ -9,10 +10,10 @@ async function findOneUser(userId) {
     console.error(error);
     throw new Error('Failed to find user');
   }
-}
+},
 
 
-async function findAllUsers() {
+async findAllUsers() {
   try {
     const users = await User.find();
     return users;
@@ -20,10 +21,10 @@ async function findAllUsers() {
     console.error(error);
     throw new Error('Failed to find users');
   }
-}
+},
 
 
-async function createUser(userData) {
+async createUser(userData) {
   try {
     const user = await User.create(userData);
     return user;
@@ -31,10 +32,10 @@ async function createUser(userData) {
     console.error(error);
     throw new Error('Failed to create user');
   }
-}
+},
 
 
-async function deleteUser(userId) {
+async deleteUser(userId) {
   try {
     const result = await User.deleteOne({ _id: userId });
     if (result.deletedCount === 1) { 
@@ -46,12 +47,12 @@ async function deleteUser(userId) {
     console.error(error);
     throw new Error('Failed to delete user');
   }
-}
+},
 
 
-async function updateUser(userId, updatedData) {
+async updateUser(userId, updateData) {
   try {
-    const result = await User.updateOne({ _id: userId }, updatedData);
+    const result = await User.updateOne({ _id: userId }, updateData);
     if (result.modifiedCount === 1) {
       return true;
     } else {
@@ -61,4 +62,6 @@ async function updateUser(userId, updatedData) {
     console.error(error);
     throw new Error('Failed to update user');
   }
+},
 }
+module.exports = userController;

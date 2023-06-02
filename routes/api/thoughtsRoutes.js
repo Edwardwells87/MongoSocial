@@ -1,13 +1,13 @@
 // Import required modules and models
 const express = require('express');
 const router = express.Router();
-const thoughtController = require('../controllers/thoughtController');
+const thoughtsController = require('../../controllers/thoughtsController');
 
 
-router.get('/', thoughtController.getAllThoughts);
-router.get('/:id', thoughtController.getThoughtById);
-router.post('/', thoughtController.createThought);
-router.put('/:id', thoughtController.updateThought);
-router.delete('/:id', thoughtController.deleteThought);
+router.get('/', thoughtsController.findAllThoughts);
+router.get('/:id', thoughtsController.findOneThought);
+router.post('/', thoughtsController.createThought);
+router.put('/:id', thoughtsController.updateThought);
+router.delete('/:id', thoughtsController.deleteThought);
 
 module.exports = router;

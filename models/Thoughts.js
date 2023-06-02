@@ -6,7 +6,7 @@ const thoughts = new Schema(
     thought_body: {
       type: String,
       required: true,
-     maxLength: 100,
+     maxLength: 300,
       minLength: 5,
     },
     username: {
@@ -17,6 +17,6 @@ const thoughts = new Schema(
   },
 );
 
-const Thoughts = model('thought', thoughtsModel);
+const Thoughts = model('thought', thoughts);
 
 module.exports = Thoughts;
