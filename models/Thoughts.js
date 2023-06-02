@@ -11,7 +11,7 @@ const thoughts = new Schema(
     },
     username: {
       type: String,
-      minLength: 8,
+      minLength: 1,
       required: true,
     },
   },
