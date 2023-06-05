@@ -14,14 +14,16 @@ const {ObjectId} = require('mongoose').Types;
 //i need to make a better async function that finds a single user by id
 async findOneUser(req, res) {
   try {
-    const user = await Users.findOne({ _id: req.params.usersId }).select('-__v');
+    const user = await Users.findOne(req.params.userId)
+    
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error:req.paras.userId + "User not found"});
+      
     }
     res.json(user);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Failed to find user' });
+    res.status(500).json({ error: 'path has completely failed to function' });
   }
 },
 
@@ -50,13 +52,11 @@ async findOneUser(req, res) {
 
   async deleteUser(req, res) {
     try {
-      const { userId } = req.params;
-      const result = await Users.deleteOne({ _id: req.params.userId });
-      if (result.deletedCount === 1) {
-        res.json({ success: true });
-      } else {
-        res.json({ success: false });
-      }
+      const deleted = await Users.findOneAndDelete(req.params.userId);
+     if(!deleted){
+       return res.status(404).json({error: "User not found"});
+     } 
+      res.json(deleted);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Failed to delete user' });
@@ -78,6 +78,39 @@ async findOneUser(req, res) {
       res.status(500).json({ error: 'Failed to update user' });
     }
   },
+async addFriend(req, res) {
+  try {
+    const friend = await Users.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $addToSet: { friends: req.params.friendId } },
+      { new: true }
+    );
+    if (!friend) {
+      return res.status(404).json({ error: 'Friend not found' });
+    }
+    res.json(friend);
+  } catch (error) { 
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add friend' });
+  }
+},
+async removeFriend(req, res) {
+  try {
+    const friend = await Users.findOneAndUpdate(
+      { _id: req.params.userId },
+      { $pull: { friends: req.params.friendId } },
+      { new: true }
+    );
+    if (!friend) {
+      return res.status(404).json({ error: 'Friend not found' });
+    }
+    res.json(friend);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove friend' });
+  }
+}
+
 };
 
 module.exports = userController;
