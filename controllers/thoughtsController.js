@@ -33,7 +33,7 @@ const thoughtsController = {
   // },
   async findOneThought(req, res) {
     try {
-      const thought = await Thoughts.findOne(req.params.thoughtid)
+      const thought = await Thoughts.findOne({ _id: req.params.id })
         .select('-__v');
       if (!thought) {
         return res.status(404).json({ error: 'Thought not found' });
@@ -91,14 +91,48 @@ const thoughtsController = {
   //need to create a findById function for thoughts
   async updateThought(req, res) {
     try {
-      const updatedThought = await Thoughts.findByIdAndUpdate(req.params.thoughtId, req.body, { new: true });
+      const updatedThought = await Thoughts.findByIdAndUpdate(req.params.id, req.body, { new: true });
       if (!updatedThought) {
-        return res.status(404).json(req.params.thoughtId);
+        return res.status(404).json(req.params.id);
       }
       return res.status(200).json(updatedThought);
     } catch (err) {
       return res.status(500).json(err);
     }
+  },
+
+async addReaction(req, res) {
+  try {
+    const friend = await Thoughts.findOneAndUpdate(
+      { _id: req.params.id },
+      { $addToSet: { reactions: req.body} },
+      { new: true }
+    );
+    if (!friend) {
+      return res.status(404).json({ error: 'Friend not found' });
+    }
+    res.json(friend);
+  } catch (error) { 
+    console.error(error);
+    res.status(500).json({ error: 'Failed to add friend' });
+  }
+},
+async removeFriend(req, res) {
+  try {
+    const friend = await Users.findOneAndUpdate(
+      { _id: req.params.id },
+      { $pull: { reactions: {_id:req.params.reactionId }} },
+      { new: true }
+    );
+    if (!friend) {
+      return res.status(404).json({ error: 'Friend not found' });
+    }
+    res.json(friend);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to remove friend' });
   }
 }
+
+};
 module.exports = thoughtsController
